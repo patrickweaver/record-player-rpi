@@ -5,6 +5,8 @@ import datetime
 from fractions import Fraction
 import time
 import numpy as np
+import requests
+import webbrowser
 
 width = 256
 height = 192
@@ -30,7 +32,7 @@ def capture_new_image_and_compare(old_image):
     camera.start_preview()
     time.sleep(1)
     camera.stop_preview()
-    camera.capture(image_path + 'new-image.jpg')
+    camera.capture(image_path + 'image.jpg')
     camera.capture(newImage, "rgb")
 
     print(defaultBackground[128, 96])
@@ -50,7 +52,7 @@ def capture_new_image_and_compare(old_image):
     if change < pixel_offset:
         print("This image is the previous image")
         return ["previous", np.copy(newImage)]
-
+    
     #print("Total pixels:")
     #print(256 * 192)
     #print("Pixels that are different:")
@@ -109,8 +111,11 @@ def find_default(image_array, color):
             print("")
 
 def playRecord():
-     print("Play:")
-     print(image_path + 'new-image.jpg')
+    print("Play:")
+    print(image_path + 'new-image.jpg')
+    #content = requests.get("http://localhost:3000/player")
+    content = webbrowser.get(using="chromium-browser").open("http://localhost:3000/player")
+    print(content)
 
 with picamera.PiCamera() as camera:
     camera.rotation = 180
@@ -141,10 +146,7 @@ with picamera.PiCamera() as camera:
             oldImage = ((oldImage / 2) + (capture_result[1] / 2))
         else:
             playRecord()
-            time.sleep(10)
-            camera.capture(oldImage, "rgb")
-            time.sleep(10)
-
+            time.sleep(20)
         print("")
         print(" - - - - - - - ")
         print("")
