@@ -142,8 +142,9 @@ with picamera.PiCamera() as camera:
         else:
             playRecord()
             time.sleep(10)
-            camera.capture(defaultBackground, "rgb")
+            camera.capture(oldImage, "rgb")
             time.sleep(10)
+
         print("")
         print(" - - - - - - - ")
         print("")
