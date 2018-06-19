@@ -13,7 +13,7 @@ oldImage = np.zeros((width, height, 3), dtype=np.uint8)
 newImage = np.zeros((width, height, 3), dtype=np.uint8)
 defaultBackground = np.zeros((width, height, 3), dtype=np.uint8)
 color_offset = 15
-pixel_offset = 0.10
+pixel_offset = 0.20
 image_path = os.getcwd() + '/public/images/'
 
 r_start = 0
@@ -33,21 +33,24 @@ def capture_new_image_and_compare(old_image):
     camera.capture(image_path + 'new-image.jpg')
     camera.capture(newImage, "rgb")
 
-    #print(oldImage[128, 96])
-    #print(newImage[128, 96])
+    print(defaultBackground[128, 96])
+    print(oldImage[128, 96])
+    print(newImage[128, 96])
 
+    print("Comparing to default")
     default_change = compare(defaultBackground, newImage)
-    print(default_change)
-    if (default_change > pixel_offset) {
+    print("Percent change from default: %.5f" % default_change)
+    if default_change < pixel_offset:
+      print("This image is the default background")
       return ["default", np.copy(newImage)]
-    }
 
+    print("Comparing to previous")
     change = compare(oldImage, newImage)
-    print(change)
-
-    if (change > pixel_offset) {
-      return ["previous", np.copy(newImage)]
-    }
+    print("Percent change from previous: %.5f" % change)
+    if change < pixel_offset:
+        print("This image is the previous image")
+        return ["previous", np.copy(newImage)]
+    
     #print("Total pixels:")
     #print(256 * 192)
     #print("Pixels that are different:")
@@ -120,6 +123,7 @@ with picamera.PiCamera() as camera:
     print("1")
     time.sleep(.1)
     camera.capture(defaultBackground, "rgb")
+    oldImage = np.copy(defaultBackground	)
 
     #camera.start_preview()
     #time.sleep(.5)
@@ -133,9 +137,12 @@ with picamera.PiCamera() as camera:
 
         if capture_result[0] == "default":
             defaultBackground = ((defaultBackground + capture_result[1]) / 2)
-        if capture_result[0] == "previous":
+        elif capture_result[0] == "previous":
             oldImage = ((oldImage + capture_result[1]) / 2)
         else:
             playRecord()
             time.sleep(20)
+        print("")
+        print(" - - - - - - - ")
+        print("")
     #find_default(oldImage, 0)
