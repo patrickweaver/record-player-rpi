@@ -50,7 +50,7 @@ def capture_new_image_and_compare(old_image):
     if change < pixel_offset:
         print("This image is the previous image")
         return ["previous", np.copy(newImage)]
-    
+
     #print("Total pixels:")
     #print(256 * 192)
     #print("Pixels that are different:")
@@ -141,7 +141,9 @@ with picamera.PiCamera() as camera:
             oldImage = ((oldImage / 2) + (capture_result[1] / 2))
         else:
             playRecord()
-            time.sleep(20)
+            time.sleep(10)
+            camera.capture(defaultBackground, "rgb")
+            time.sleep(10)
         print("")
         print(" - - - - - - - ")
         print("")
