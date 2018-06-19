@@ -136,9 +136,9 @@ with picamera.PiCamera() as camera:
         capture_result = capture_new_image_and_compare(oldImage)
 
         if capture_result[0] == "default":
-            defaultBackground = ((defaultBackground + capture_result[1]) / 2)
+            defaultBackground = ((defaultBackground / 2) + (capture_result[1] / 2))
         elif capture_result[0] == "previous":
-            oldImage = ((oldImage + capture_result[1]) / 2)
+            oldImage = ((oldImage / 2) + (capture_result[1] / 2))
         else:
             playRecord()
             time.sleep(20)
