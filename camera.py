@@ -11,11 +11,13 @@ import webbrowser
 width = 256
 height = 192
 
+playing = False
+
 oldImage = np.zeros((width, height, 3), dtype=np.uint8)
 newImage = np.zeros((width, height, 3), dtype=np.uint8)
 defaultBackground = np.zeros((width, height, 3), dtype=np.uint8)
 color_offset = 15
-pixel_offset = 0.20
+pixel_offset = 0.30
 image_path = os.getcwd() + '/public/images/'
 
 r_start = 0
@@ -28,7 +30,7 @@ b_start = 0
 b_end = 0
 
 
-def capture_new_image_and_compare(old_image):
+def capture_new_image_and_compare(old_image, playing):
     camera.start_preview()
     time.sleep(1)
     camera.stop_preview()
@@ -45,7 +47,8 @@ def capture_new_image_and_compare(old_image):
     if default_change < pixel_offset:
       print("This image is the default background")
       return ["default", np.copy(newImage)]
-
+    if playing:
+        return ["playing", False]
     print("Comparing to previous")
     change = compare(oldImage, newImage)
     print("Percent change from previous: %.5f" % change)
@@ -116,6 +119,7 @@ def playRecord():
     #content = requests.get("http://localhost:3000/player")
     content = webbrowser.get(using="chromium-browser").open("http://localhost:3000/player")
     print(content)
+    camera.capture(newImage, "rgb")
 
 with picamera.PiCamera() as camera:
     camera.rotation = 180
@@ -138,15 +142,18 @@ with picamera.PiCamera() as camera:
 
     a = True
     while a:
-        capture_result = capture_new_image_and_compare(oldImage)
-
-        if capture_result[0] == "default":
-            defaultBackground = ((defaultBackground / 2) + (capture_result[1] / 2))
-        elif capture_result[0] == "previous":
-            oldImage = ((oldImage / 2) + (capture_result[1] / 2))
-        else:
-            playRecord()
-            time.sleep(20)
+        capture_result = capture_new_image_and_compare(oldImage, playing)
+        if capture_result[0] != "playing":
+            if capture_result[0] == "default":
+                playing = False
+                defaultBackground = ((defaultBackground / 2) + (capture_result[1] / 2))
+            elif capture_result[0] == "previous":
+                oldImage = ((oldImage / 2) + (capture_result[1] / 2))
+            else:
+                if not playing:
+                    playing = True
+                    playRecord()
+                    time.sleep(20)
         print("")
         print(" - - - - - - - ")
         print("")
