@@ -132,7 +132,7 @@ app.get('/player', async function(req, res) {
         try {
           let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId, deviceId));
 
-          res.render('rpi', {});
+          res.send('<h1>stopping</h1>');
 
         } catch(err) {
           console.log("Spotify Playback Request Error:");
@@ -177,6 +177,33 @@ app.get('/player', function(req,res) {
   }
 });
 */
+
+
+app.get('/stop-playback', async function(req, res) {
+  try {
+    let devices = await rp(spotify.apiOptions(req.cookies.spotifyAccessToken));
+    console.log("Devices:");
+    console.log(devices);
+    if (devices) {
+      deviceId = devices.devices[0].id;
+    }
+    try {
+      let playback = await rp(spotify.stopPlaybackOptions(req.cookies.spotifyAccessToken, deviceId));
+
+      res.render('rpi', {});
+
+    } catch(err) {
+      console.log("Spotify Playback Request Error:");
+      console.log(err);
+      res.send("Playback Request Error");
+    }
+
+  } catch(err) {
+    console.log("Spotify Devices Request Error:");
+    console.log(err);
+    res.send("Devices Request Error");
+  }
+})
 
 // General error handling
 function handleError(res, err) {

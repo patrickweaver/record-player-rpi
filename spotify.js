@@ -39,12 +39,27 @@ function apiPlaybackOptions(spotifyToken, albumId, deviceId) {
       'bearer': spotifyToken
     },
     body: {
-      context_uri: 'spotify:album:' + albumId
+      context_uri: 'spotify:album:' + albumId,
+      "offset": {
+        "position": 0
+      }
     }
   }
   //console.log(JSON.stringify(options));
 
   return options;
+}
+
+function stopPlaybackOptions(spotifyToken, deviceId) {
+  var options = {
+    method: 'PUT',
+    uri: spotifyApiUrl + 'me/player/pause?device_id=' + deviceId,
+    json: true,
+    auth: {
+      'bearer': spotifyToken
+    }
+  }
+  return options
 }
 
 
@@ -107,6 +122,7 @@ module.exports = {
   queryOptions: queryOptions,
   authQueryString: authQueryString,
   apiPlaybackOptions: apiPlaybackOptions,
+  stopPlaybackOptions: stopPlaybackOptions,
   apiOptions: apiOptions,
   authOptions: authOptions,
   setCookies: setCookies,

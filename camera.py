@@ -16,7 +16,7 @@ playing = False
 oldImage = np.zeros((width, height, 3), dtype=np.uint8)
 newImage = np.zeros((width, height, 3), dtype=np.uint8)
 defaultBackground = np.zeros((width, height, 3), dtype=np.uint8)
-color_offset = 15
+color_offset = 30
 pixel_offset = 0.30
 image_path = os.getcwd() + '/public/images/'
 
@@ -30,7 +30,11 @@ b_start = 0
 b_end = 0
 
 
-def capture_new_image_and_compare(old_image, playing):
+def capture_new_image_and_compare(playing):
+    global defaultBackground
+    global newImage
+    global oldImage
+
     camera.start_preview()
     time.sleep(1)
     camera.stop_preview()
@@ -55,7 +59,7 @@ def capture_new_image_and_compare(old_image, playing):
     if change < pixel_offset:
         print("This image is the previous image")
         return ["previous", np.copy(newImage)]
-    
+
     #print("Total pixels:")
     #print(256 * 192)
     #print("Pixels that are different:")
@@ -121,18 +125,22 @@ def playRecord():
     print(content)
     camera.capture(newImage, "rgb")
 
+def stopRecord():
+    print("Stopping")
+    webbrowser.get(using="chromium-browser").open("http://localhost:3000/stop-playback")
+
 with picamera.PiCamera() as camera:
     camera.rotation = 180
     camera.resolution = (256, 192)
 
     print("Getting Default image in:\n3")
-    time.sleep(.1)
+    time.sleep(1)
     print("2")
-    time.sleep(.1)
+    time.sleep(1)
     print("1")
-    time.sleep(.1)
+    time.sleep(1)
     camera.capture(defaultBackground, "rgb")
-    oldImage = np.copy(defaultBackground	)
+    oldImage = np.copy(defaultBackground)
 
     #camera.start_preview()
     #time.sleep(.5)
@@ -142,9 +150,11 @@ with picamera.PiCamera() as camera:
 
     a = True
     while a:
-        capture_result = capture_new_image_and_compare(oldImage, playing)
+        capture_result = capture_new_image_and_compare(playing)
         if capture_result[0] != "playing":
             if capture_result[0] == "default":
+                if playing:
+                    stopRecord()
                 playing = False
                 defaultBackground = ((defaultBackground / 2) + (capture_result[1] / 2))
             elif capture_result[0] == "previous":
