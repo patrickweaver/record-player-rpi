@@ -6,6 +6,7 @@ You will need the following to make your own:
 
 - [Google Cloud API Key](https://cloud.google.com/docs/authentication/api-keys) (this is set as GCP_API_KEY ENV variable)
 - Create a [Spotify App](https://beta.developer.spotify.com/dashboard/applications) (SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET ENV variables)
+- SPOTIFY_STATE_STRING env variable is used to confirm the correct redirect during Spotify auth.
 
 Set PORT ENV variable to 3000
 
