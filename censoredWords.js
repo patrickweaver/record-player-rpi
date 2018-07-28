@@ -10,6 +10,8 @@ const censoredWords = [
   'cd',
   '[cd]',
   'soundtrack'
+  '(album)',
+  '[german import]'
 ];
 
 
