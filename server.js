@@ -132,7 +132,8 @@ app.get('/player', async function(req, res) {
         try {
           let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId, deviceId));
 
-          res.send('<h1>stopping</h1>');
+          res.send('<h1>Playing: ' + apiResponse.gvBestGuess + '</h1>')
+          //res.send('<h1>stopping</h1>');
 
         } catch(err) {
           console.log("Spotify Playback Request Error:");
@@ -190,7 +191,8 @@ app.get('/stop-playback', async function(req, res) {
     try {
       let playback = await rp(spotify.stopPlaybackOptions(req.cookies.spotifyAccessToken, deviceId));
 
-      res.render('rpi', {});
+      res.send('<h1>stopping</h1>');
+      //res.render('rpi', {});
 
     } catch(err) {
       console.log("Spotify Playback Request Error:");
