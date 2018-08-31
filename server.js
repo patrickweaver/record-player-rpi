@@ -132,7 +132,7 @@ app.get('/player', async function(req, res) {
         try {
           let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId, deviceId));
 
-          res.send('<h1>Playing: ' + apiResponse.gvBestGuess + '</h1><img src="/images/new-image.jpg" width="300" />')
+          res.send('<h1>Playing: ' + apiResponse.gvBestGuess + '</h1><img src="/images/image.jpg" width="300" />')
           //res.send('<h1>stopping</h1>');
 
         } catch(err) {
