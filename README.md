@@ -33,6 +33,11 @@ In another terminal tab or after sending the node server to the backgorund, star
 `python3 camera.py`
 
 
+## Demo:
+
+Video here: [https://player.vimeo.com/video/288443309](https://player.vimeo.com/video/288443309)
+
+
 
 
 
